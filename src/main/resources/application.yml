@@ -1,0 +1,32 @@
+server:
+  port: 4003
+spring:
+  profiles:
+    active: study
+  application:
+    name: user
+  config:
+    import: optional:configserver:http://localhost:8888
+  jpa:
+    hibernate:
+      dll-auto: update
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://svc.sel3.cloudtype.app:30867/gym?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password: 6g2llfz0tu0j
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+        
+eureka:
+ instance:
+   instance-id: user-microservice-instance # eureka에 등록되는 id 값
+ client:
+   register-with-eureka: true  # 유레카에 등록할지 여부.
+   fetch-registry: true  # 유레카에서 조회할지 여부
+   service-url:
+     defaultZone: http://localhost:8761/eureka # 서비스를 등록할 Eureka 서버 주소를 지정
