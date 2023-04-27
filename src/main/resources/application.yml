@@ -1,5 +1,5 @@
 server:
-  port: 4003
+  port: 0
 spring:
   profiles:
     active: study
@@ -15,6 +15,14 @@ spring:
     url: jdbc:mysql://svc.sel3.cloudtype.app:30867/gym?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: root
     password: 6g2llfz0tu0j
+  devtools:
+    livereload:
+      enabled: true
+  thymeleaf:
+#    prefix : classpath:templates/
+#    suffix : .html
+    cache: false
+#    check-template-location: true
 
 management:
   endpoints:
@@ -24,9 +32,16 @@ management:
         
 eureka:
  instance:
-   instance-id: user-microservice-instance # eureka에 등록되는 id 값
+   instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} # eureka에 등록되는 id 값
  client:
    register-with-eureka: true  # 유레카에 등록할지 여부.
    fetch-registry: true  # 유레카에서 조회할지 여부
    service-url:
      defaultZone: http://localhost:8761/eureka # 서비스를 등록할 Eureka 서버 주소를 지정
+
+token:
+  expiration_time: 864000000
+  secret: user_token
+
+welcome:
+  message: Welcome to MSA study User Service.
