@@ -22,3 +22,15 @@ nickname varchar(25) NOT NULL COMMENT '회원_닉네임',
 created_at date not null comment '회원_생성일자',
 updated_at date not null comment '회원_수정일자'
 );
+
+99. 에러
+
+@Getter 추가해도 cannot find symbol 뜨는 이유
+> build.gradle 파일에 annotationProcessor('org.projectlombok:lombok') 추가
+
+dependencies {
+   ...
+   annotationProcessor('org.projectlombok:lombok')
+}
+
+참고 : https://medium.com/sjk5766/lombok-cannot-find-symbol-aff511d311ee
