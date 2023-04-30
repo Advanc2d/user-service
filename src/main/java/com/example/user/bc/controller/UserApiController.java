@@ -40,7 +40,7 @@ public class UserApiController {
     }
 
     @PostMapping("/user/check-login")
-    public ResponseEntity<HttpStatus> login(@RequestBody UserEntity user) throws Exception {
+    public ResponseEntity<HttpStatus> login(@ModelAttribute("user") UserEntity user) throws Exception {
 
         Optional<UserEntity> userInfo = userService.findUserByEmail(user.getEmail());
 

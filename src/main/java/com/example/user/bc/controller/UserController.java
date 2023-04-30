@@ -1,5 +1,6 @@
 package com.example.user.bc.controller;
 
+import com.example.user.bc.domain.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,8 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("greeting","안녕하세요");
+    public String login(Model model, UserEntity user) {
+        model.addAttribute("user",user);
         return "login";
     }
 }

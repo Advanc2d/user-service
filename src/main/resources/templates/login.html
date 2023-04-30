@@ -6,10 +6,10 @@
 </head>
 <body>
 <h2>Login</h2>
-<form th:action="@{/login}" method="post">
+<form id="login-form" th:action="@{/api/user/check-login}" method="post" th:object="${user}">
     <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <label for="email">email:</label>
+        <input type="text" id="email" name="email" required>
     </div>
     <div>
         <label for="password">Password:</label>
@@ -19,5 +19,35 @@
         <button type="submit">Login</button>
     </div>
 </form>
+<script th:inline="javascript">
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const loginForm = document.getElementById("login-form");
+
+        loginForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const formData = new FormData(loginForm);
+
+            fetch(loginForm.action, {
+                method: loginForm.method,
+                body: formData,
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        alert("로그인이 성공했습니다.");
+                        location.reload();
+                    } else if (response.status === 401) {
+                        alert("비밀번호가 올바르지 않습니다.");
+                    } else {
+                        alert("서버 에러가 발생했습니다. 다시 시도해주세요.");
+                    }
+                })
+                .catch(function (error) {
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+</script>
 </body>
 </html>
