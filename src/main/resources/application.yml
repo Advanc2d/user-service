@@ -39,6 +39,7 @@ eureka:
     service-url:
       defaultZone: http://eureka.taskoo.net/eureka # 서비스를 등록할 Eureka 서버 주소를 지정
 
+
 token:
   expiration_time: 864000000
   secret: user_token
