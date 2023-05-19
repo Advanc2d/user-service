@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8001
 spring:
   profiles:
     active: study
@@ -19,8 +19,8 @@ spring:
     livereload:
       enabled: true
   thymeleaf:
-#    prefix : classpath:templates/
-#    suffix : .html
+    #    prefix : classpath:templates/
+    #    suffix : .html
     cache: false
 #    check-template-location: true
 
@@ -29,15 +29,16 @@ management:
     web:
       exposure:
         include: refresh
-        
+
 eureka:
- instance:
-   instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} # eureka에 등록되는 id 값
- client:
-   register-with-eureka: true
-   fetch-registry: true
-   service-url:
-     defaultZone: http://localhost:8761/eureka # 서비스를 등록할 Eureka 서버 주소를 지정
+#  instance:
+#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} # eureka에 등록되는 id 값
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka.taskoo.net/eureka # 서비스를 등록할 Eureka 서버 주소를 지정
+
 
 token:
   expiration_time: 864000000

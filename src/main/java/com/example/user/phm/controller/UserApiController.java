@@ -37,12 +37,22 @@ public class UserApiController {
         this.modelMapper = modelMapper;
         this.userService = userService;
     }
+    @GetMapping("/message")
+    public String message(@RequestHeader("user-request") String header) {
+        log.info(header);
+        return String.format("Hello! in User Service : %s", header) ;
+    }
+
+    @GetMapping("/check")
+    public String check() {
+        return String.format("Hi! This is a check User Service") ;
+    }
 
     @GetMapping("/health_check")
     public String status() {
         log.info(env.getProperty("welcome.message"));
         log.info(cm.getMessage());
-        return this.message;
+        return this.message + String.format("on PORT : %s", env.getProperty("local.server.port")) ;
     }
     @PostMapping("/email/check/{email}")
     public String getUserEmailCheck(@RequestParam(value = "email", required=true) String email)  {
