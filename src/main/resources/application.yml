@@ -12,7 +12,7 @@ spring:
       dll-auto: update
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://svc.sel3.cloudtype.app:30867/gym?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://svc.selW3.cloudtype.app:30867/gym?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: root
     password: 6g2llfz0tu0j
   devtools:
