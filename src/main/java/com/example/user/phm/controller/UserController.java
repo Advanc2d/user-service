@@ -8,11 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @Controller
-@RequestMapping("/user")
 public class UserController {
+    @GetMapping("/login")
+    public String login() {
+        log.info("login html");
+        return "login";
+    }
     @GetMapping("/join")
-    public String index() {
-        log.info("index html");
+    public String join() {
+        log.info("join html");
         return "join";
     }
 }
