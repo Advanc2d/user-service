@@ -15,7 +15,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.authorizeRequests().antMatchers("/user/**", "users/**").permitAll();
         // 이 uri로 호출되는 모든 것들을 통과시켜주겠다.
-        http.headers().frameOptions().disable();
+//        http.headers().frameOptions().disable();
         // h2-console 접근 안됨
     }
 }
