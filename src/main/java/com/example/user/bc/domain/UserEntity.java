@@ -1,6 +1,8 @@
 package com.example.user.bc.domain;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.util.Date;
@@ -18,6 +20,7 @@ public class UserEntity {
     @Column(length = 100, nullable = false, unique = true)
     private String email;
 
+    @JsonIgnore
     @Column(length = 100, nullable = false)
     private String password;
 

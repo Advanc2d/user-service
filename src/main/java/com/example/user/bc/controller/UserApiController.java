@@ -22,9 +22,14 @@ public class UserApiController {
         this.userService = userService;
     }
 
-    @GetMapping("/info")
-    public String getUserInfo() {
-        return "";
+    @PostMapping("/info")
+    public ResponseEntity<UserEntity> getUserInfo(@RequestBody UserEntity user) throws Exception {
+        Optional<UserEntity> userInfo = userService.findUserByEmail(user.getEmail());
+        if (userInfo.isPresent()) {
+            return ResponseEntity.ok(userInfo.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PostMapping("/check-email")
