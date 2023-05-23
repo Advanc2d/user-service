@@ -5,18 +5,18 @@ import com.example.user.phm.entity.UserEntity;
 import com.example.user.phm.repository.UserRepository;
 import com.example.user.phm.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.asm.MemberSubstitution;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 import javax.transaction.Transactional;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -35,14 +35,13 @@ public class UserServiceImpl implements UserService {
 
     // 사용자 이메일 조회(Email)
     public boolean findByEmail(String email) throws Exception {
-        Optional<UserEntity> optional = userRepository.findByEmail(email);
+        UserEntity userEntity = userRepository.findByEmail(email);
 
-        if (!optional.isPresent()) {
+        if (userEntity == null) {
             return false;
         }
 
-        UserEntity entity = optional.get();
-        UserDto userDto = modelMapper.map(entity, UserDto.class);
+        UserDto userDto = modelMapper.map(userEntity, UserDto.class);
         log.info("user email : {}", userDto.getEmail());
         return true;
     }
@@ -50,10 +49,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDto createUser(UserDto user) {
-        log.info("create user {}", user);
+        log.info("ServiceImpl createUser {}", user);
+
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         UserEntity entity = modelMapper.map(user, UserEntity.class);
-
         entity.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(entity);
@@ -62,10 +61,41 @@ public class UserServiceImpl implements UserService {
         return userDto;
     }
 
+    @Override
+    public UserDto getUserByEmail(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        if (userEntity == null) {
+            throw new UsernameNotFoundException("User no found");
+        }
+
+        UserDto userDto = modelMapper.map(userEntity, UserDto.class);
+
+        return userDto;
+    }
+
+    @Override
+    public Iterable<UserEntity> getUserByAll() {
+        // UserEntity userEntity = userRepository.findByEmail(email);
+        return userRepository.findAll();
+    }
 //    private UserEntity getMyUserByEmail(String email) {
 //        return userRepository.findByEmail(email)
 //                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 //    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepository.findByEmail(username);
+
+        if (userEntity == null) {
+            throw new UsernameNotFoundException(username);
+        }
+
+        return new User(userEntity.getEmail(), userEntity.getPassword(),
+                        true, true, true, true,
+                        new ArrayList<>());
+    }
 
 //    public UserDto getUserDetailByEmail(String email) {
 //        UserEntity entity = getMyUserByEmail(email);
