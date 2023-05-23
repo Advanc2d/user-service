@@ -61,7 +61,6 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = modelMapper.map(entity, UserDto.class);
         return userDto;
     }
-
 //    private UserEntity getMyUserByEmail(String email) {
 //        return userRepository.findByEmail(email)
 //                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
