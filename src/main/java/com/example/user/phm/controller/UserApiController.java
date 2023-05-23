@@ -7,6 +7,10 @@ import com.example.user.phm.service.UserService;
 import com.example.user.phm.vo.RequestUser;
 import com.example.user.phm.vo.ResponseUser;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
-@RequestMapping("/user")
+@RequestMapping
 public class UserApiController {
 
     @Value("${welcome.message}")
@@ -45,7 +49,7 @@ public class UserApiController {
 
     @GetMapping("/check")
     public String check() {
-        return String.format("Hi! This is a check User Service") ;
+        return String.format("Hi! This is a check User Service") + String.format("on PORT : %s", env.getProperty("local.server.port")) ;
     }
 
     @GetMapping("/health_check")
@@ -54,34 +58,39 @@ public class UserApiController {
         log.info(cm.getMessage());
         return this.message + String.format("on PORT : %s", env.getProperty("local.server.port")) ;
     }
-    @PostMapping("/email/check/{email}")
-    public String getUserEmailCheck(@RequestParam(value = "email", required=true) String email)  {
-        log.info("getUserEmailCheck : {}", email);
-        String result = "";
-        try {
-            boolean flag = userService.findByEmail(email);
-            if (flag) {
-                result = "full";
-            }
-            else {
-                result = "empty";
-            }
-        }
-        catch(Exception e) {
-            e.getMessage();
-        }
-        return result;
+
+    @PostMapping("/create")
+    public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser user)  {
+        log.info("Controller RequestUser : {}", user);
+
+        modelMapper.getConfiguration().setMatchingStrategy((MatchingStrategies.STRICT));
+        UserDto userDto = modelMapper.map(user, UserDto.class);
+
+        userService.createUser(userDto);
+
+        ResponseUser responseUser = modelMapper.map(userDto, ResponseUser.class);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser user)  {
-        log.info("createUser : {}", user);
-        modelMapper.getConfiguration().setMatchingStrategy((MatchingStrategies.STRICT));
+    @GetMapping("/list")
+    public ResponseEntity<List<ResponseUser>> getUsers() {
+        Iterable<UserEntity> userList = userService.getUserByAll();
 
-        UserDto userDto = modelMapper.map(user, UserDto.class);
-        userService.createUser(userDto);
-        ResponseUser responseUser = modelMapper.map(userDto, ResponseUser.class);
+        List<ResponseUser> result = new ArrayList<>();
+        userList.forEach(v -> {
+            result.add(modelMapper.map(v, ResponseUser.class));
+        });
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<ResponseUser> getUserByEmail(@PathVariable("email") String email)  {
+        log.info("getUserByEmail Email : {}", email);
+        
+        UserDto userDto = userService.getUserByEmail(email);
+        ResponseUser returnUser = modelMapper.map(userDto, ResponseUser.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(returnUser);
     }
 }

@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 0
 spring:
   profiles:
     active: study
@@ -31,8 +31,8 @@ management:
         include: refresh
 
 eureka:
-#  instance:
-#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} # eureka에 등록되는 id 값
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} # eureka에 등록되는 id 값
   client:
     register-with-eureka: true
     fetch-registry: true
