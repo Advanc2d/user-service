@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 0
 spring:
   profiles:
     active: study
@@ -12,7 +12,7 @@ spring:
       dll-auto: update
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://svc.selW3.cloudtype.app:30867/gym?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://svc.sel3.cloudtype.app:30867/gym?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: root
     password: 6g2llfz0tu0j
   devtools:
@@ -31,13 +31,14 @@ management:
         include: refresh
 
 eureka:
-#  instance:
-#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} # eureka에 등록되는 id 값
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} # eureka에 등록되는 id 값
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
       defaultZone: http://eureka.taskoo.net/eureka # 서비스를 등록할 Eureka 서버 주소를 지정
+
 
 token:
   expiration_time: 864000000

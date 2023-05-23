@@ -16,8 +16,8 @@ public class UserEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "USER_ID", unique=true)
-    private Long id;
+    @Column(name = "USER_ID")
+    private Long userId;
 
     @Column(nullable = false, length = 100, unique = true)
     private String email;// 이메일
