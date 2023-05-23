@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins="*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserApiController {
 
     private final UserService userService;
@@ -22,12 +22,12 @@ public class UserApiController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/info")
+    @GetMapping("/info")
     public String getUserInfo() {
         return "";
     }
 
-    @PostMapping("/user/check-email")
+    @PostMapping("/check-email")
     public ResponseEntity<UserEntity> checkEmail(@RequestBody UserEntity user) throws Exception {
 
         Optional<UserEntity> userInfo = userService.findUserByEmail(user.getEmail());
@@ -39,7 +39,7 @@ public class UserApiController {
         }
     }
 
-    @PostMapping("/user/check-login")
+    @PostMapping("/check-login")
     public ResponseEntity<HttpStatus> login(@ModelAttribute("user") UserEntity user) throws Exception {
 
         Optional<UserEntity> userInfo = userService.findUserByEmail(user.getEmail());
