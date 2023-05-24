@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
-@RequestMapping
+@RequestMapping("/")
 public class UserApiController {
 
     @Value("${welcome.message}")
@@ -87,7 +87,7 @@ public class UserApiController {
     @GetMapping("/{email}")
     public ResponseEntity<ResponseUser> getUserByEmail(@PathVariable("email") String email)  {
         log.info("getUserByEmail Email : {}", email);
-
+        
         UserDto userDto = userService.getUserByEmail(email);
         ResponseUser returnUser = modelMapper.map(userDto, ResponseUser.class);
 

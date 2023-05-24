@@ -46,3 +46,8 @@ token:
 
 welcome:
   message: Welcome to MSA study User Service.
+
+logging:
+  level:
+    com.example.user: DEBUG
+
