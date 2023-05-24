@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.user.phm.service.UserService;
-import org.springframework.security.web.authentication.AuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
