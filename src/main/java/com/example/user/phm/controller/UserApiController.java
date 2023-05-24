@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
-@RequestMapping
+@RequestMapping("/")
 public class UserApiController {
 
     @Value("${welcome.message}")

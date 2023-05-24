@@ -1,6 +1,6 @@
 package com.example.user.phm.security;
 
-import org.hibernate.cfg.Environment;
+import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,8 +30,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         // http.authorizeRequests().antMatchers("/user/**", "users/**").permitAll();
-        http.authorizeRequests().antMatchers("/**")
-                .hasIpAddress("10.10.28.97")
+        http.authorizeRequests()
+                .antMatchers("/**")
+                .access("hasIpAddress('127.0.0.1')")
                 .and()
                 .addFilter(getAuthenticationFilter());
         // 이 uri로 호출되는 모든 것들을 통과시켜주겠다.
@@ -40,7 +41,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     private AuthenticationFilter getAuthenticationFilter() throws Exception {
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(userService, env, authenticationManager());
         authenticationFilter.setAuthenticationManager(authenticationManager());
 
         return authenticationFilter;
