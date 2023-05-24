@@ -50,3 +50,4 @@ welcome:
 logging:
   level:
     com.example.user: DEBUG
+

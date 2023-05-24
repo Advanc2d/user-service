@@ -93,8 +93,8 @@ public class UserServiceImpl implements UserService {
         }
 
         return new User(userEntity.getEmail(), userEntity.getPassword(),
-                        true, true, true, true,
-                        new ArrayList<>());
+                true, true, true, true,
+                new ArrayList<>());
     }
 
 //    public UserDto getUserDetailByEmail(String email) {
