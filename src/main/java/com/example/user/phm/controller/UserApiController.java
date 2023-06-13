@@ -84,13 +84,34 @@ public class UserApiController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<ResponseUser> getUserByEmail(@PathVariable("email") String email)  {
         log.info("getUserByEmail Email : {}", email);
         
         UserDto userDto = userService.getUserByEmail(email);
-        ResponseUser returnUser = modelMapper.map(userDto, ResponseUser.class);
+        if (userDto == null) {
+            return null;
+        }
+        else {
+            ResponseUser returnUser = modelMapper.map(userDto, ResponseUser.class);
 
-        return ResponseEntity.status(HttpStatus.OK).body(returnUser);
+            return ResponseEntity.status(HttpStatus.OK).body(returnUser);
+        }
+    }
+
+    
+    @GetMapping("/nickname/{nickname}")
+    public ResponseEntity<ResponseUser> getUserByNickname(@PathVariable("nickname") String nickName)  {
+        log.info("getUserByNickname Nickname : {}", nickName);
+        
+        UserDto userDto = userService.getUserByNickname(nickName);
+        if (userDto == null) {
+            return null;
+        }
+        else {
+            ResponseUser returnUser = modelMapper.map(userDto, ResponseUser.class);
+            
+            return ResponseEntity.status(HttpStatus.OK).body(returnUser);
+        }
     }
 }

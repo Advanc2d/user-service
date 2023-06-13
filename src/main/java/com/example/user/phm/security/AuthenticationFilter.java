@@ -9,9 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.example.user.phm.dto.UserDto;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,10 +18,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.user.phm.dto.UserDto;
 import com.example.user.phm.service.UserService;
 import com.example.user.phm.vo.RequestLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,48 +33,53 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private Environment env;
 
     @Autowired
-    public AuthenticationFilter(UserService userService,
-                                Environment env,
-                                AuthenticationManager authenticationManager) {
-        this.userService = userService;
-        this.env = env;
+    public AuthenticationFilter(AuthenticationManager authenticationManager, 
+                                UserService userService,
+                                Environment env) {
         super.setAuthenticationManager(authenticationManager);
+        this.env = env;
+        this.userService = userService;
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
+    public Authentication attemptAuthentication(HttpServletRequest request, 
                                                 HttpServletResponse response) throws AuthenticationException {
-
         try {
-            RequestLogin creds = new ObjectMapper().readValue(request.getInputStream(), RequestLogin.class);
+           RequestLogin creds = new ObjectMapper().readValue(request.getInputStream(), RequestLogin.class);
 
-            return getAuthenticationManager().authenticate(
+           
+           return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            creds.getEmail(),
-                            creds.getPassword(),
-                            new ArrayList<>()));
+                            creds.getEmail(), 
+                            creds.getPassword(), 
+                            new ArrayList<>()
+                    )
+            );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response,
+    protected void successfulAuthentication(HttpServletRequest request, 
+                                            HttpServletResponse response, 
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-        log.debug( ((User) authResult.getPrincipal()).getUsername());
-        String userName = ((User) authResult.getPrincipal()).getUsername();
+                                        
+        String userName = ((User)authResult.getPrincipal()).getUsername();
+        log.debug("User Email : {}", userName);
         UserDto userDetails = userService.getUserDetailsByEmail(userName);
-
+        
         String token = Jwts.builder()
-                        .setSubject(userDetails.getEmail())
-                        .setExpiration(new Date(System.currentTimeMillis()
-                                + Long.parseLong(env.getProperty("toekn.expiration_time"))))
-                        .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
-                        .compact();
-        log.debug(token);
+                    .setSubject(userDetails.getEmail())
+                    .setExpiration( new Date(System.currentTimeMillis() + 
+                            Long.parseLong(env.getProperty("token.expiration_time"))))
+                    .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
+                    .compact();
+
         response.addHeader("token", token);
-        response.addHeader("email", userDetails.getEmail());
+        response.addHeader("userId", userDetails.getEmail());
+
     }
+    
 }

@@ -66,7 +66,20 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByEmail(email);
 
         if (userEntity == null) {
-            throw new UsernameNotFoundException("User no found");
+            return null;
+        }
+
+        UserDto userDto = modelMapper.map(userEntity, UserDto.class);
+
+        return userDto;
+    }
+
+    @Override
+    public UserDto getUserByNickname(String nickName) {
+        UserEntity userEntity = userRepository.findByNickname(nickName);
+
+        if (userEntity == null) {
+            return null;
         }
 
         UserDto userDto = modelMapper.map(userEntity, UserDto.class);
@@ -79,10 +92,6 @@ public class UserServiceImpl implements UserService {
         // UserEntity userEntity = userRepository.findByEmail(email);
         return userRepository.findAll();
     }
-//    private UserEntity getMyUserByEmail(String email) {
-//        return userRepository.findByEmail(email)
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-//    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -108,8 +117,4 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = modelMapper.map(userEntity, UserDto.class);
         return userDto;
     }
-//    public UserDto getUserDetailByEmail(String email) {
-//        UserEntity entity = getMyUserByEmail(email);
-//        return toObject(entity, UserDto.class);
-//    }
 }
