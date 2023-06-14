@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/")
 public class UserController {
-    // @GetMapping("/login")
-    // public String login() {
-    //     log.info("login html");
-    //     return "login";
-    // }
+    @GetMapping("/loginPage")
+    public String login() {
+        log.info("login html");
+        return "login";
+    }
 
-    @GetMapping("/join")
+    @GetMapping("/joinPage")
     public String join() {
         log.info("join html");
         return "join";
